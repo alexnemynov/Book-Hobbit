@@ -1,31 +1,47 @@
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from aiogram.utils.keyboard import InlineKeyboardBuilder
-from lexicon import lexicon_ru
+from lexicon.lexicon import LEXICON
+from services.file_handling import book
 
 
-# Функция для формирования инлайн-клавиатуры на лету
-def create_inline_kb(width: int,
-                     *args: str,
-                     **kwargs: str) -> InlineKeyboardMarkup:
-    # Инициализируем билдер
+def create_bookmarks_keyboard(*args: int) -> InlineKeyboardMarkup:
+    # Создаем объект клавиатуры
     kb_builder = InlineKeyboardBuilder()
-    # Инициализируем список для кнопок
-    buttons: list[InlineKeyboardButton] = []
+    # Наполняем клавиатуру кнопками-закладками в порядке возрастания
+    for button in sorted(args):
+        kb_builder.row(InlineKeyboardButton(
+            text=f'{button} - {book[button][:100]}',
+            callback_data=str(button)
+        ))
+    # Добавляем в клавиатуру в конце две кнопки "Редактировать" и "Отменить"
+    kb_builder.row(
+        InlineKeyboardButton(
+            text=LEXICON['edit_bookmarks_button'],
+            callback_data='edit_bookmarks'
+        ),
+        InlineKeyboardButton(
+            text=LEXICON['cancel'],
+            callback_data='cancel'
+        ),
+        width=2
+    )
+    return kb_builder.as_markup()
 
-    # Заполняем список кнопками из аргументов args и kwargs
-    if args:
-        for button in args:
-            buttons.append(InlineKeyboardButton(
-                text=lexicon_ru[button] if button in lexicon_ru else button,
-                callback_data=button))
-    if kwargs:
-        for button, text in kwargs.items():
-            buttons.append(InlineKeyboardButton(
-                text=text,
-                callback_data=button))
 
-    # Распаковываем список с кнопками в билдер методом row c параметром width
-    kb_builder.row(*buttons, width=width)
-
-    # Возвращаем объект инлайн-клавиатуры
+def create_edit_keyboard(*args: int) -> InlineKeyboardMarkup:
+    # Создаем объект клавиатуры
+    kb_builder = InlineKeyboardBuilder()
+    # Наполняем клавиатуру кнопками-закладками в порядке возрастания
+    for button in sorted(args):
+        kb_builder.row(InlineKeyboardButton(
+            text=f'{LEXICON["del"]} {button} - {book[button][:100]}',
+            callback_data=f'{button}del'
+        ))
+    # Добавляем в конец клавиатуры кнопку "Отменить"
+    kb_builder.row(
+        InlineKeyboardButton(
+            text=LEXICON['cancel'],
+            callback_data='cancel'
+        )
+    )
     return kb_builder.as_markup()
