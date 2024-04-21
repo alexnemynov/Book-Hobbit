@@ -1,8 +1,6 @@
 create_query = '''
 drop table if exists users;
 drop table if exists books;
-drop table if exists lexicon;
-drop table if exists menu_commands;
 
 CREATE TABLE IF NOT EXISTS public.books
 (

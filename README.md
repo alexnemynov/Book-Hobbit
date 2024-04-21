@@ -51,7 +51,7 @@ ALTER USER bot_user CREATEDB;
 7. Запуcтить бот.
 
 ```bash
-python main.py
+python3 main.py
 ```
 
 
