@@ -1,8 +1,9 @@
+import json
 import os
 import sys
 
 
-BOOK_PATH = 'book/book.txt'
+BOOK_PATH = os.path.join(sys.path[0], os.path.normpath('book/book.txt'))
 PAGE_SIZE = 1050
 
 book: dict[int, str] = {}
@@ -28,8 +29,8 @@ def _get_part_text(text: str, start: int, size: int) -> tuple[str, int]:
 
 
 # Функция, формирующая словарь книги
-def prepare_book(path: str) -> None:
-    with open(path, 'r', encoding="utf-8") as file:
+def prepare_book() -> None:
+    with open(BOOK_PATH, 'r', encoding="utf-8") as file:
         text = file.read()
     start, page_num = 0, 1
 
@@ -39,6 +40,10 @@ def prepare_book(path: str) -> None:
         page_num += 1
         start += page_len
 
+    with open(os.path.join(sys.path[0], os.path.normpath('book/book.json')), mode='w', encoding='utf-8') as f:
+        json.dump(book, f)
+
+
 
 # Вызов функции prepare_book для подготовки книги из текстового файла
-prepare_book(os.path.join(sys.path[0], os.path.normpath(BOOK_PATH)))
+# prepare_book()

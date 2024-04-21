@@ -5,8 +5,10 @@ from aiogram import Bot, Dispatcher
 from aiogram.client.bot import DefaultBotProperties
 from aiogram.enums import ParseMode
 from config_data.config import Config, load_config
+from database.setup_db import setup_db
 from handlers import other_handlers, user_handlers
 from keyboards.main_menu import set_main_menu
+
 
 # Инициализируем логгер
 logger = logging.getLogger(__name__)
@@ -22,6 +24,10 @@ async def main():
 
     # Выводим в консоль информацию о начале запуска бота
     logger.info('Starting bot')
+
+    # WARNING: This will delete all existing tables and will
+    # re-fill the data for the bot's lexicon. See docstring
+    setup_db()
 
     # Загружаем конфиг в переменную config
     config: Config = load_config()
