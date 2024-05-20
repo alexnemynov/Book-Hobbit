@@ -1,5 +1,3 @@
-from copy import deepcopy
-
 from aiogram import F, Router
 from aiogram.filters import Command, CommandStart
 from aiogram.types import CallbackQuery, Message
@@ -9,7 +7,6 @@ from keyboards.bookmarks_kb import (create_bookmarks_keyboard,
                                     create_edit_keyboard)
 from keyboards.pagination_kb import create_pagination_keyboard
 from lexicon.lexicon import LEXICON
-from services.file_handling import prepare_book
 
 
 router = Router()
@@ -27,7 +24,7 @@ async def process_start_command(message: Message):
         books=[1],
         book_marks={}
     )
-    prepare_book()
+    # prepare_book()
     await message.answer(LEXICON[message.text])
 
 
